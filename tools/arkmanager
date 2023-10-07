@@ -1313,7 +1313,8 @@ doRun() {
 
   serverpid=0
   restartserver=1
-
+  echo "$(timestamp): pre shutdown function" >> "./debug_log.log"
+  echo "$(timestamp): pre shutdown function"
   # Shutdown the server when we are terminated
   shutdown_server(){
     restartserver=0
