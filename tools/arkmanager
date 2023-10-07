@@ -1362,7 +1362,9 @@ doRun() {
         serverdowntries=0
         if [ "$serveronline" -eq 0 ]; then
           # Check if the server has fully started
-          if ! isTheServerUp; then
+
+          server_currently_up = isTheServerUp # does not call the same function twice if false
+          if ! server_currently_up; then
             # Enable auto-restart if the server is up
             echo "$(timestamp): server is up"
             notify "${notifyMsgServerUp:-Server is up}"
@@ -1372,7 +1374,7 @@ doRun() {
             fi
             serveronline=1
           fi
-        elif isTheServerUp; then
+        elif server_currently_up; then
           (( serverdowntries++ ))
 
           if (( serverdowntries > 12 )); then
