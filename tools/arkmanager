@@ -1328,7 +1328,7 @@ doRun() {
   trap shutdown_server INT TERM
 
   # Enable job control so server gets its own process group
-  set -m
+  # set -m
 
   # Auto-restart loop
   while [ $restartserver -ne 0 ]; do
