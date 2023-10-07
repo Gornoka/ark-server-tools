@@ -4,7 +4,7 @@
 # Net Installer, used with curl
 #
 
-arkstGithubRepo="gornoka/ark-server-tools"
+arkstGithubRepo="Gornoka/ark-server-tools"
 
 steamcmd_user="$1"
 shift
