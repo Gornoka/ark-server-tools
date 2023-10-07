@@ -1364,6 +1364,7 @@ doRun() {
           # Check if the server has fully started
           # does not call the same function twice if false
           server_currently_up=isTheServerUp
+          echo "$(timestamp): debug checked lsof in server up loop"
           if ! server_currently_up; then
             # Enable auto-restart if the server is up
             echo "$(timestamp): server is up"
