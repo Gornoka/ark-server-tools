@@ -1354,10 +1354,11 @@ doRun() {
     serverdowntries=0
 
     sleep 5
-
+    echo "$(timestamp): debug right before lsof containing loop"
     while true; do
       # Grab the current server PID
       local pid="$(getServerPID)"
+      echo "$(timestamp): debug checked lsof in server up loop, current pid is $pid and serverpid is $serverpid"
       if [ "$pid" == "$serverpid" ]; then
         serverdowntries=0
         if [ "$serveronline" -eq 0 ]; then
