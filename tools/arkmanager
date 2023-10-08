@@ -1313,7 +1313,6 @@ doRun() {
 
   serverpid=0
   restartserver=1
-  echo "$(timestamp): pre shutdown function" >> "./debug_log.log"
   echo "$(timestamp): pre shutdown function"
   # Shutdown the server when we are terminated
   shutdown_server(){
@@ -1325,18 +1324,15 @@ doRun() {
     fi
     exit 0
   }
-  echo "$(timestamp): pre trap" >> "./debug_log.log"
   echo "$(timestamp): pre trap"
   trap shutdown_server INT TERM
-  echo "$(timestamp): post trap" >> "./debug_log.log"
   echo "$(timestamp): post trap"
   # Enable job control so server gets its own process group
   set -m
-  echo "$(timestamp): post set -m" >> "./debug_log.log"
   echo "$(timestamp): post set -m"
   # Auto-restart loop
   while [ $restartserver -ne 0 ]; do
-    echo -n "$(timestamp): Running" >> "./debug_log.log"
+    echo -n "$(timestamp): Running"
     notify "${notifyMsgStarting:-Starting}"
     printf " %q" "$arkserverroot/$arkserverexec" "$arkserveropts" "${arkextraopts[@]}"
     echo
@@ -1345,7 +1341,7 @@ doRun() {
     # Grab the server PID
     serverpid=$!
     echo "$serverpid" >"${arkserverroot}/${arkserverpidfile}"
-    echo "$(timestamp): Server PID: $serverpid" >> "./debug_log.log"
+    echo "$(timestamp): Server PID: $serverpid"
     # Disable auto-restart so we don't get caught in a restart loop
     rm -f "$arkserverroot/$arkautorestartfile"
     restartserver=0
@@ -1358,21 +1354,21 @@ doRun() {
     serverdowntries=0
 
     sleep 5
-    echo "$(timestamp): debug right before lsof containing loop" >> "./debug_log.log"
+    echo "$(timestamp): debug right before lsof containing loop"
     while true; do
       # Grab the current server PID
       local pid="$(getServerPID)"
-      echo "$(timestamp): debug checked lsof in server up loop, current pid is $pid and serverpid is $serverpid" >> "./debug_log.log"
+      echo "$(timestamp): current pid is $pid and serverpid is $serverpid"
       if [ "$pid" == "$serverpid" ]; then
         serverdowntries=0
         if [ "$serveronline" -eq 0 ]; then
           # Check if the server has fully started
           # does not call the same function twice if false
           server_currently_up=isTheServerUp
-          echo "$(timestamp): debug checked lsof in server up loop" >> "./debug_log.log"
-          if ! server_currently_up; then
+          echo "$(timestamp): debug checked lsof in server up loop"
+          if ! $server_currently_up; then
             # Enable auto-restart if the server is up
-            echo "$(timestamp): server is up" >> "./debug_log.log"
+            echo "$(timestamp): server is up"
             notify "${notifyMsgServerUp:-Server is up}"
             if [ "$restartserver" -eq 0 ]; then
               touch "$arkserverroot/$arkautorestartfile"
@@ -1380,7 +1376,7 @@ doRun() {
             fi
             serveronline=1
           fi
-        elif server_currently_up; then
+        elif $server_currently_up; then
           (( serverdowntries++ ))
 
           if (( serverdowntries > 12 )); then
